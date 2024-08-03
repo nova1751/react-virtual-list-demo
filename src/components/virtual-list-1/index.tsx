@@ -34,8 +34,9 @@ const VirtualList1: React.FC<VirtualList1Props> = (props) => {
 
   const handleScroll = () => {
     const scrollTop = list.current?.scrollTop ?? 0
-    setStartIndex(Math.floor(scrollTop / itemSize))
-    setEndIndex(startIndex + visibleCount)
+    const startIndexValue = Math.floor(scrollTop / itemSize)
+    setStartIndex(startIndexValue)
+    setEndIndex(startIndexValue + visibleCount)
     setStartOffset(scrollTop - (scrollTop % itemSize))
   }
 
