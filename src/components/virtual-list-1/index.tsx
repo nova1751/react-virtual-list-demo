@@ -28,9 +28,27 @@ const VirtualList1: React.FC<VirtualList1Props> = (props) => {
   )
 
   useEffect(() => {
-    setSceenHeight(list.current?.clientHeight ?? 0)
-    setEndIndex(0 + visibleCount)
-  }, [visibleCount])
+    setEndIndex(startIndex + visibleCount)
+  }, [visibleCount, startIndex])
+  useEffect(() => {
+    const element = list.current
+    setSceenHeight(element?.clientHeight ?? 0)
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setSceenHeight(entry.contentRect.height)
+      }
+    })
+
+    if (element) {
+      resizeObserver.observe(element)
+    }
+
+    return () => {
+      if (element) {
+        resizeObserver.unobserve(element)
+      }
+    }
+  }, [])
 
   const handleScroll = () => {
     const scrollTop = list.current?.scrollTop ?? 0
