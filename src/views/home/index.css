@@ -3,5 +3,18 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: large;
+  font-size: 64px;
+  padding: 10px;
+  color: cyan;
+}
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: rgb(70, 247, 70);
+  text-decoration: none;
+}
+a:hover,
+a:active {
+  color: cyan;
 }

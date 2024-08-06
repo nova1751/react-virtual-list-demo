@@ -40,8 +40,7 @@ const VirtualList3: React.FC<VirtualList3Props> = (props) => {
     [endIndex, bufferScale, visibleCount, listData.length]
   )
   const visibleData = useMemo(() => {
-    console.log('test', startIndex, endIndex, aboveCount, belowCount)
-    return listData.slice(startIndex - aboveCount, Math.min(listData.length, endIndex) + belowCount)
+    return listData.slice(startIndex - aboveCount, endIndex + belowCount)
   }, [listData, startIndex, aboveCount, endIndex, belowCount])
 
   useEffect(() => {
@@ -106,9 +105,13 @@ const VirtualList3: React.FC<VirtualList3Props> = (props) => {
           setPositions(newPositions)
         }
       }
-      const size =
-        positions[startIndexValue].top - positions[startIndexValue - aboveCount]?.top ?? 0
-      setStartOffset(!startIndexValue ? 0 : positions[startIndexValue - 1]?.bottom - size)
+      if (startIndexValue) {
+        const size =
+          positions[startIndexValue]?.top - positions[startIndexValue - aboveCount]?.top ?? 0
+        setStartOffset(positions[startIndexValue - 1]?.bottom - size)
+      } else {
+        setStartOffset(0)
+      }
     }
   }
 
