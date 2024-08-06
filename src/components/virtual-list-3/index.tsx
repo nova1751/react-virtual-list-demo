@@ -13,13 +13,12 @@ export interface PositionType {
 }
 interface VirtualList3Props {
   listData: ItemType[]
-  itemSize: number
   estimatedItemSize: number
   bufferScale: number
 }
 
 const VirtualList3: React.FC<VirtualList3Props> = (props) => {
-  const { listData = [], itemSize = 200, estimatedItemSize, bufferScale = 1 } = props
+  const { listData = [], estimatedItemSize, bufferScale = 1 } = props
   const [screenHeight, setSceenHeight] = useState(0)
   const [startOffset, setStartOffset] = useState(0)
   const [startIndex, setStartIndex] = useState(0)
@@ -30,7 +29,10 @@ const VirtualList3: React.FC<VirtualList3Props> = (props) => {
   const items = useRef<HTMLDivElement>(null)
 
   const listHeight = useMemo(() => positions[positions.length - 1]?.bottom ?? 0, [positions])
-  const visibleCount = useMemo(() => Math.ceil(screenHeight / itemSize), [screenHeight, itemSize])
+  const visibleCount = useMemo(
+    () => Math.ceil(screenHeight / estimatedItemSize),
+    [screenHeight, estimatedItemSize]
+  )
   const aboveCount = useMemo(
     () => Math.min(startIndex, bufferScale * visibleCount),
     [startIndex, bufferScale, visibleCount]
@@ -70,7 +72,7 @@ const VirtualList3: React.FC<VirtualList3Props> = (props) => {
           index,
           height: estimatedItemSize,
           top: index * estimatedItemSize,
-          bottom: (index + 1) * estimatedItemSize
+          bottom: (index + 1) * estimatedItemSize,
         }))
       ),
     [estimatedItemSize, listData]

@@ -12,7 +12,7 @@ const router: Router = createBrowserRouter([
   { path: '/', element: <Home /> },
   { path: '/demo1', element: <VirtualListDemo1 /> },
   { path: '/demo2', element: <VirtualListDemo2 /> },
-  { path: '/demo3', element: <VirtualListDemo3 /> }
+  { path: '/demo3', element: <VirtualListDemo3 /> },
 ])
 
 export default router

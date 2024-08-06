@@ -66,7 +66,7 @@ const VirtualList2: React.FC<VirtualList2Props> = (props) => {
           index,
           height: estimatedItemSize,
           top: index * estimatedItemSize,
-          bottom: (index + 1) * estimatedItemSize
+          bottom: (index + 1) * estimatedItemSize,
         }))
       ),
     [estimatedItemSize, listData]

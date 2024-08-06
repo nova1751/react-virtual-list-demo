@@ -7,7 +7,7 @@ for (let i = 0; i < 1000; i++) {
 }
 
 const VirtualListDemo2 = () => {
-  return <VirtualList2 listData={data} itemSize={50} estimatedItemSize={50} />
+  return <VirtualList2 listData={data} estimatedItemSize={50} />
 }
 
 export default VirtualListDemo2
