@@ -21,7 +21,6 @@ const VirtualList1: React.FC<VirtualList1Props> = (props) => {
 
   const listHeight = useMemo(() => listData.length * itemSize, [listData.length, itemSize])
   const visibleCount = useMemo(() => Math.ceil(screenHeight / itemSize), [screenHeight, itemSize])
-  const transformValue = useMemo(() => `translateY(${startOffset}px)`, [startOffset])
   const visibleData = useMemo(
     () => listData.slice(startIndex, Math.min(listData.length, endIndex)),
     [startIndex, endIndex, listData]
@@ -54,14 +53,13 @@ const VirtualList1: React.FC<VirtualList1Props> = (props) => {
     const scrollTop = list.current?.scrollTop ?? 0
     const startIndexValue = Math.floor(scrollTop / itemSize)
     setStartIndex(startIndexValue)
-    setEndIndex(startIndexValue + visibleCount)
     setStartOffset(scrollTop - (scrollTop % itemSize))
   }
 
   return (
     <div ref={list} className="infinite-list-container" onScroll={handleScroll}>
       <div className="infinite-list-phantom" style={{ height: `${listHeight}px` }}></div>
-      <div className="infinite-list" style={{ transform: transformValue }}>
+      <div className="infinite-list" style={{ transform: `translateY(${startOffset}px` }}>
         {visibleData.map((item) => (
           <div
             className="infinite-list-item"

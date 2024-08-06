@@ -11,14 +11,15 @@ export interface PositionType {
   top: number
   bottom: number
 }
-interface VirtualList2Props {
+interface VirtualList3Props {
   listData: ItemType[]
   itemSize: number
   estimatedItemSize: number
+  bufferScale: number
 }
 
-const VirtualList2: React.FC<VirtualList2Props> = (props) => {
-  const { listData = [], itemSize = 200, estimatedItemSize } = props
+const VirtualList3: React.FC<VirtualList3Props> = (props) => {
+  const { listData = [], itemSize = 200, estimatedItemSize, bufferScale = 1 } = props
   const [screenHeight, setSceenHeight] = useState(0)
   const [startOffset, setStartOffset] = useState(0)
   const [startIndex, setStartIndex] = useState(0)
@@ -30,10 +31,18 @@ const VirtualList2: React.FC<VirtualList2Props> = (props) => {
 
   const listHeight = useMemo(() => positions[positions.length - 1]?.bottom ?? 0, [positions])
   const visibleCount = useMemo(() => Math.ceil(screenHeight / itemSize), [screenHeight, itemSize])
-  const visibleData = useMemo(
-    () => listData.slice(startIndex, Math.min(listData.length, endIndex)),
-    [startIndex, endIndex, listData]
+  const aboveCount = useMemo(
+    () => Math.min(startIndex, bufferScale * visibleCount),
+    [startIndex, bufferScale, visibleCount]
   )
+  const belowCount = useMemo(
+    () => Math.min(listData.length - endIndex, bufferScale * visibleCount),
+    [endIndex, bufferScale, visibleCount, listData.length]
+  )
+  const visibleData = useMemo(() => {
+    console.log('test', startIndex, endIndex, aboveCount, belowCount)
+    return listData.slice(startIndex - aboveCount, Math.min(listData.length, endIndex) + belowCount)
+  }, [listData, startIndex, aboveCount, endIndex, belowCount])
 
   useEffect(() => {
     setEndIndex(startIndex + visibleCount)
@@ -67,9 +76,7 @@ const VirtualList2: React.FC<VirtualList2Props> = (props) => {
       ),
     [estimatedItemSize, listData]
   )
-  useEffect(() => {
-    updateItemSize(startIndex)
-  })
+  useEffect(() => updateItemSize(startIndex))
 
   const handleScroll = () => {
     const scrollTop = list.current?.scrollTop ?? 0
@@ -99,14 +106,16 @@ const VirtualList2: React.FC<VirtualList2Props> = (props) => {
           setPositions(newPositions)
         }
       }
+      const size =
+        positions[startIndexValue].top - positions[startIndexValue - aboveCount]?.top ?? 0
+      setStartOffset(!startIndexValue ? 0 : positions[startIndexValue - 1]?.bottom - size)
     }
-    setStartOffset(!startIndexValue ? 0 : positions[startIndexValue - 1]?.bottom)
   }
 
   const getStartIndex = (value: number) => {
     let start = 0
     let end = positions.length - 1
-    let tempIndex = null
+    let tempIndex: number | null = null
     while (start <= end) {
       const midIndex = Math.floor((start + end) / 2)
       const midValue = positions[midIndex].bottom
@@ -142,4 +151,4 @@ const VirtualList2: React.FC<VirtualList2Props> = (props) => {
   )
 }
 
-export default VirtualList2
+export default VirtualList3
