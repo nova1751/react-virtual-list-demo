@@ -81,7 +81,6 @@ const VirtualList3: React.FC<VirtualList3Props> = (props) => {
     const scrollTop = list.current?.scrollTop ?? 0
     const startIndexValue = getStartIndex(scrollTop)
     setStartIndex(startIndexValue)
-    setEndIndex(startIndexValue + visibleCount)
   }
 
   const updateItemSize = (startIndexValue: number) => {

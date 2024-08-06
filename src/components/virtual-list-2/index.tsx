@@ -13,12 +13,11 @@ export interface PositionType {
 }
 interface VirtualList2Props {
   listData: ItemType[]
-  itemSize: number
   estimatedItemSize: number
 }
 
 const VirtualList2: React.FC<VirtualList2Props> = (props) => {
-  const { listData = [], itemSize = 200, estimatedItemSize } = props
+  const { listData = [], estimatedItemSize } = props
   const [screenHeight, setSceenHeight] = useState(0)
   const [startOffset, setStartOffset] = useState(0)
   const [startIndex, setStartIndex] = useState(0)
@@ -29,7 +28,11 @@ const VirtualList2: React.FC<VirtualList2Props> = (props) => {
   const items = useRef<HTMLDivElement>(null)
 
   const listHeight = useMemo(() => positions[positions.length - 1]?.bottom ?? 0, [positions])
-  const visibleCount = useMemo(() => Math.ceil(screenHeight / itemSize), [screenHeight, itemSize])
+  // 根据预估高度计算渲染数量，这里应该使用数量偏小的数量防止展示不全
+  const visibleCount = useMemo(
+    () => Math.ceil(screenHeight / estimatedItemSize),
+    [screenHeight, estimatedItemSize]
+  )
   const visibleData = useMemo(
     () => listData.slice(startIndex, Math.min(listData.length, endIndex)),
     [startIndex, endIndex, listData]
@@ -55,6 +58,7 @@ const VirtualList2: React.FC<VirtualList2Props> = (props) => {
       }
     }
   }, [])
+  // 初始化位置数组
   useEffect(
     () =>
       setPositions(
@@ -67,17 +71,17 @@ const VirtualList2: React.FC<VirtualList2Props> = (props) => {
       ),
     [estimatedItemSize, listData]
   )
+  // 时刻更新位置数组，防止渲染不全
   useEffect(() => {
     updateItemSize(startIndex)
   })
-
+  // 处理滚动事件，二分查找
   const handleScroll = () => {
     const scrollTop = list.current?.scrollTop ?? 0
     const startIndexValue = getStartIndex(scrollTop)
     setStartIndex(startIndexValue)
-    setEndIndex(startIndexValue + visibleCount)
   }
-
+  // 更新位置数组
   const updateItemSize = (startIndexValue: number) => {
     const itemlist = items.current?.children
     if (itemlist) {
@@ -99,10 +103,10 @@ const VirtualList2: React.FC<VirtualList2Props> = (props) => {
           setPositions(newPositions)
         }
       }
+      setStartOffset(!startIndexValue ? 0 : newPositions[startIndexValue - 1]?.bottom)
     }
-    setStartOffset(!startIndexValue ? 0 : positions[startIndexValue - 1]?.bottom)
   }
-
+  // 二分查找获取索引
   const getStartIndex = (value: number) => {
     let start = 0
     let end = positions.length - 1
