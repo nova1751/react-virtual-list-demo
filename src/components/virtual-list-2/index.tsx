@@ -93,6 +93,8 @@ const VirtualList2: React.FC<VirtualList2Props> = (props) => {
         const index = Number(item.id.slice(1))
         const oldHeight = positions[index].height
         const diffValue = oldHeight - height
+        console.log(diffValue)
+
         if (diffValue) {
           newPositions[index].bottom -= diffValue
           newPositions[index].height = height

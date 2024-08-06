@@ -20,9 +20,6 @@
   position: absolute;
   text-align: center;
 }
-.infinite-list > .infinite-list-item:first-child {
-  border-top: 1px solid #999;
-}
 
 .infinite-list-item {
   padding: 10px;
