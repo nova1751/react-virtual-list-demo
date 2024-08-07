@@ -84,7 +84,7 @@ const VirtualList4: React.FC<VirtualList4Props> = (props) => {
       const startIndexValue = getStartIndex(scrollTop)
       setStartIndex(startIndexValue)
     },
-    167,
+    16.7,
     { leading: false, trailing: true }
   )
 
