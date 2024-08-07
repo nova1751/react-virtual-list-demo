@@ -21,7 +21,6 @@ const VirtualList2: React.FC<VirtualList2Props> = (props) => {
   const [screenHeight, setSceenHeight] = useState(0)
   const [startOffset, setStartOffset] = useState(0)
   const [startIndex, setStartIndex] = useState(0)
-  const [endIndex, setEndIndex] = useState(0)
   const [positions, setPositions] = useState<PositionType[]>([])
 
   const list = useRef<HTMLDivElement>(null)
@@ -33,14 +32,12 @@ const VirtualList2: React.FC<VirtualList2Props> = (props) => {
     () => Math.ceil(screenHeight / estimatedItemSize),
     [screenHeight, estimatedItemSize]
   )
+  const endIndex = useMemo(() => startIndex + visibleCount, [startIndex, visibleCount])
   const visibleData = useMemo(
     () => listData.slice(startIndex, Math.min(listData.length, endIndex)),
     [startIndex, endIndex, listData]
   )
 
-  useEffect(() => {
-    setEndIndex(startIndex + visibleCount)
-  }, [visibleCount, startIndex])
   useEffect(() => {
     const element = list.current
     setSceenHeight(element?.clientHeight ?? 0)
