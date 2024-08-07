@@ -6,8 +6,8 @@ for (let i = 0; i < 1000; i++) {
   data.push({ id: `_${i}`, value: faker.lorem.sentences() })
 }
 
-const VirtualListDemo2 = () => {
+const VirtualListDemo3 = () => {
   return <VirtualList3 listData={data} estimatedItemSize={50} bufferScale={1} />
 }
 
-export default VirtualListDemo2
+export default VirtualListDemo3
